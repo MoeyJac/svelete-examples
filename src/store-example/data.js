@@ -12,3 +12,25 @@ export let store1 = readable(0, (set) => {
 });
 
 export let store2 = writable("");
+
+const subscribers = [];
+setInterval(() => {
+  subscribers.forEach((subscriber) => {
+    subscriber(+new Date());
+  });
+}, 1000);
+
+export let store3 = {
+  subscribe(fn) {
+    fn("");
+    subscribers.push(fn);
+    return () => {
+      subscribers.splice(subscribers.indexOf(fn), 1);
+    };
+  },
+  set(value) {
+    subscribers.forEach((subscriber) => {
+      subscriber(value);
+    });
+  },
+};
