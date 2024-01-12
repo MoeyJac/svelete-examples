@@ -1,5 +1,5 @@
 <script>
-    import { update } from './data';
+    import { store2 } from './data';
 </script>
 
-<input on:input={(e) => {update(e.currentTarget.value);}}/>
+<input on:input={(e) => {$store2 = e.currentTarget.value;}}/>
