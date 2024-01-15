@@ -1,7 +1,8 @@
 <script>
-	import { setContext } from 'svelte';
-	
+	import { setContext, onMount } from 'svelte';
+
 	import store from './redux-store-example/redux';
+	import mousePosition from './dom-event-store-example/mousePosition';
 
 	import Parent from './context-example/Parent.svelte';
 	import Parent2 from './context-example/Parent2.svelte';
@@ -37,6 +38,10 @@
 	function increment() {
 		store.dispatch({ type: 'INCREMENT' });
 	}
+
+	//DOM Event Store Example
+	
+
 
 </script>
 
@@ -86,6 +91,15 @@
 <button on:click={decrement}>-</button>
 {$store}
 <button on:click={increment}>+</button>
+
+
+<div>
+	__________________
+	DOM Event Store Example
+	------------------
+</div>
+<h2>Mouse Position: {$mousePosition.x}, {$mousePosition.y}</h2>
+
 
 <style>
 	div {white-space: pre-line;}
