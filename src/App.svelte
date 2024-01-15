@@ -1,5 +1,6 @@
 <script>
 	import { setContext, onMount } from 'svelte';
+	import { writable, derived } from 'svelte/store';
 
 	import store from './redux-store-example/redux';
 	import mousePosition from './dom-event-store-example/mousePosition';
@@ -39,9 +40,31 @@
 		store.dispatch({ type: 'INCREMENT' });
 	}
 
-	//DOM Event Store Example
-	
+	//Derived Store Example
+	const num = writable(10);
+	const num2 = writable(42);
 
+	// derived from 1 store, syncronously 
+	const doubleOfNum = derived(num, ($num) => {
+		return $num * 2
+	})
+	// derived from 2 stores, syncronously
+	const multiplication = derived([num, num2], ([$num, $num2]) => {
+		return $num * $num2
+	})
+
+	// get the derived value asyncronously
+	const delayedNum = derived(num, ($num, set) => {
+		// setup/initialization of the function
+		let timeoutId = setTimeout(() => {
+			set($num)
+		}, 1000);
+
+		// cleanup function
+		return () => {
+			clearTimeout(timeoutId);
+		}
+	}, 'not set') // <= default value = 'not set'  
 
 </script>
 
@@ -100,6 +123,23 @@
 </div>
 <h2>Mouse Position: {$mousePosition.x}, {$mousePosition.y}</h2>
 
+
+<div>
+	__________________
+	Derived Store Example
+	__________________
+</div>
+<input bind:value={$num} type="number"/>
+<input bind:value={$num2} type="number"/>
+<div>
+	{$num} * 2 = {$doubleOfNum}
+</div>
+<div>
+	{$num} * {$num2} = {$multiplication} 
+</div>
+<div>
+	delayedNum: {$delayedNum}
+</div>
 
 <style>
 	div {white-space: pre-line;}
